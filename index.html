@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Birthday, My Love — Our Quiet Poetry</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500&family=Dancing+Script:wght@500;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#ffc23d;--cream:#fff6ee}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{overflow-x:hidden;background:#5e1d42}
+body{font-family:'Montserrat',sans-serif;color:#fff;overflow-x:hidden}
+#bg{position:fixed;inset:0;z-index:0;transition:background 1.4s ease}
+#bg:after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 38%,rgba(255,235,240,.55),rgba(255,170,200,.18) 40%,transparent 70%)}
+.vig{position:fixed;inset:0;z-index:6;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,rgba(40,8,25,.55) 100%)}
+.grain{position:fixed;inset:-50%;z-index:7;pointer-events:none;opacity:.14;mix-blend-mode:overlay;animation:gr .6s steps(3) infinite;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+@keyframes gr{33%{transform:translate(-3%,2%)}66%{transform:translate(2%,-3%)}}
+canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
+
+/* LOADER / ENTER */
+#burn{position:fixed;inset:0;width:100%;height:100%;z-index:90;pointer-events:none;display:none}
+#intro{position:fixed;inset:0;z-index:300;background:#2a0a1c;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;transition:opacity 1.2s,visibility 1.2s}
+#intro.gone{opacity:0;visibility:hidden}
+#intro small{letter-spacing:6px;text-transform:uppercase;font-size:.66rem;color:#ffb6cf;opacity:.8}
+#intro h1{font:italic 300 3.4rem 'Cormorant Garamond',serif;margin:.6rem 0 1.4rem;text-shadow:0 0 40px rgba(255,150,190,.6)}
+#pct{font-size:.72rem;letter-spacing:4px;color:#ffd9e6}
+#lbar{width:min(260px,70vw);height:2px;background:rgba(255,255,255,.15);margin:14px auto 0}#lbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff8fb1,var(--gold))}
+#enter{display:none;flex-direction:column;gap:14px;align-items:center}
+.btn{font:400 .7rem 'Montserrat';letter-spacing:3px;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,190,210,.6);padding:14px 30px;border-radius:40px;cursor:pointer;transition:.3s}
+.btn:hover{background:rgba(255,194,61,.25);border-color:var(--gold);box-shadow:0 0 30px rgba(255,194,61,.4)}
+.btn.link{border:none;background:none;opacity:.7;letter-spacing:2px;padding:6px}
+.snd{font-size:.62rem;letter-spacing:4px;text-transform:uppercase;opacity:.6;margin-top:6px}
+
+/* HUD */
+#hud{position:fixed;left:0;right:0;bottom:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:14px 18px calc(14px + env(safe-area-inset-bottom));font-size:.62rem;letter-spacing:3px;text-transform:uppercase;pointer-events:none}
+#hud>*{pointer-events:auto}
+.pill{cursor:pointer;padding:8px 16px;border-radius:30px;background:rgba(40,8,25,.45);backdrop-filter:blur(8px);border:1px solid rgba(255,190,210,.4);color:#fff;font:inherit;letter-spacing:inherit;text-transform:inherit}
+.pill.on{border-color:var(--gold);color:var(--gold)}
+#count{opacity:.85;text-shadow:0 1px 8px rgba(0,0,0,.4)}
+#bar{position:fixed;top:0;left:0;height:3px;z-index:101;background:linear-gradient(90deg,#ff8fb1,var(--gold));width:0}
+#toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:250;background:rgba(40,8,25,.85);padding:10px 18px;border-radius:20px;font-size:.72rem;letter-spacing:1px;opacity:0;transition:opacity .5s;pointer-events:none;text-align:center;max-width:90vw}
+
+/* SCENES */
+#film{position:relative;z-index:10}
+.scene{position:relative}
+.stage{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;perspective:1100px}
+.chap{position:absolute;left:5vw;top:7vh;z-index:50;pointer-events:none}
+.chap small{display:block;font-size:.66rem;letter-spacing:6px;text-transform:uppercase;color:var(--gold);text-shadow:0 0 14px rgba(255,194,61,.6)}
+.chap h2{font:italic 300 clamp(2rem,5vw,4rem)/1.05 'Cormorant Garamond',serif;text-shadow:0 4px 30px rgba(60,5,30,.55);max-width:80vw}
+.cutw{position:absolute;left:50%;top:45%;will-change:transform,opacity;filter:drop-shadow(0 22px 28px rgba(50,5,30,.55))}
+.cut{padding:11px 11px 13px;background:var(--cream)}
+.cut img{display:block;max-width:72vw;max-height:42vh;max-height:42dvh;object-fit:contain;filter:saturate(1.05) contrast(1.03)}
+.cap{position:absolute;left:50%;transform:translateX(-50%);width:max-content;max-width:min(92vw,620px);bottom:13vh;text-align:center;z-index:50;padding:12px 22px;border-radius:18px;background:rgba(40,8,25,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);pointer-events:none;transition:opacity .45s}
+.dots{font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-top:8px}
+.cap b{display:block;font:400 .66rem 'Montserrat';letter-spacing:6px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;text-shadow:0 0 14px rgba(255,194,61,.6)}
+.cap h3{font:italic 500 clamp(1.7rem,4.6vw,2.7rem)/1.15 'Cormorant Garamond',serif;text-shadow:0 3px 22px rgba(60,5,30,.7)}
+.cap p{font-weight:300;font-size:.95rem;line-height:1.7;margin:6px auto 0;max-width:560px;text-shadow:0 2px 12px rgba(60,5,30,.8)}
+.paper{position:absolute;left:50%;top:50%;width:min(780px,92vw);transform:translate(-50%,-50%);padding:3.2rem 2.6rem 2rem;border-radius:6px;color:#5a1a33;
+background:linear-gradient(160deg,#fffaf3,#ffe9ee);box-shadow:0 40px 90px rgba(30,0,15,.6),0 0 80px rgba(255,194,61,.35);transition:transform .15s}
+.seal{position:absolute;top:-30px;left:50%;margin-left:-30px;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 1.35rem 'Cormorant Garamond',serif;color:#ffe3ec;background:radial-gradient(circle at 35% 35%,#ff6d93,#8e1236);border:2px solid #f5c26b;box-shadow:0 8px 20px rgba(80,0,20,.5)}
+.sal{font:600 2.4rem 'Dancing Script',cursive;color:#d6336c;margin-bottom:.8rem}
+#lt{font:italic 400 1.22rem/1.95 'Cormorant Garamond',serif;white-space:pre-wrap;height:46vh;height:46dvh;overflow-y:auto;scrollbar-width:none}
+#lt::-webkit-scrollbar{display:none}
+.cur{display:inline-block;width:2px;height:1.1em;background:#d6336c;vertical-align:middle;animation:bk .8s infinite}@keyframes bk{50%{opacity:0}}
+#again{display:none;margin:1rem auto 0;color:#8a2346;border-color:#d6336c;background:rgba(214,51,108,.08)}
+
+/* paper hills + sunflowers */
+.hills{position:fixed;left:0;right:0;bottom:0;height:30vh;z-index:8;pointer-events:none}
+.hill{position:absolute;left:-5%;right:-5%;bottom:-6vh;border-radius:50% 50% 0 0/100% 100% 0 0;filter:drop-shadow(0 -8px 14px rgba(30,0,15,.35))}
+.h1{height:15vh;background:#7f2a55}.h2{height:11vh;background:#5e1d42;bottom:-4vh}
+.gf{position:absolute;bottom:3vh;transform-origin:50% 100%;animation:sw 5s infinite alternate ease-in-out}
+.gf svg{display:block;filter:drop-shadow(0 6px 8px rgba(40,0,20,.5))}
+.gf:after{content:'';position:absolute;left:50%;margin-left:-3px;top:55%;bottom:-4vh;width:6px;background:#3d6226;z-index:-1}
+@keyframes sw{from{rotate:-3deg}to{rotate:3deg}}
+#lb{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(40,8,25,.9);cursor:zoom-out}
+#lb img{max-width:94vw;max-height:90vh;border:10px solid var(--cream);animation:pop .6s cubic-bezier(.16,1,.3,1)}@keyframes pop{from{transform:rotateY(90deg) scale(.6);opacity:0}}
+@media(max-width:700px){#intro h1{font-size:2.3rem}.paper{padding:2.8rem 1.3rem 1.4rem}#lt{font-size:1.08rem;line-height:1.8}.sal{font-size:2rem}.cap p{font-size:.88rem}}
+</style>
+</head>
+<body>
+<div id="bg"></div><div class="vig"></div><div class="grain"></div><canvas id="cv"></canvas>
+<div id="bar"></div><div id="toast"></div>
+
+<div id="intro">
+  <small>A paper theatre in eight scenes</small>
+  <h1>Our Quiet Poetry</h1>
+  <div id="load"><div id="pct">Setting up the paper theatre 0%</div><div id="lbar"><i id="lfill"></i></div></div>
+  <div id="enter">
+    <button class="btn" id="goManual">Enter the full experience</button>
+    <button class="btn link" id="goAuto">Or let it play by itself</button>
+    <div class="snd">Sound on · best with headphones</div>
+  </div>
+</div>
+
+<div id="film"></div>
+<div class="hills" id="hills"><div class="hill h1"></div><div class="hill h2"></div></div>
+
+<div id="hud">
+  <span id="count">01 / 08</span>
+  <span style="display:flex;gap:10px"><button class="pill" id="autoB">Auto</button><button class="pill" id="sndB">Sound</button></span>
+</div>
+<div id="lb"><img id="lbi" alt=""></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const letterText=`Dear wife,
+
+I wish this birthday is filled with lot of excitements and new things to explore together with me!! Well, uk that my sister asked me once that "Why do I love you ?" and I looked at her with so much confusion like it felt like she was asking:
+why is sky blue? why does the sea have endless way? And why does fire has flames?
+
+How can I explain her that when I'm with you I feel alive, I feel completed.
+How to explain that my love for u is like the wind? Although eyes cannot see it but it is a force whose vibration one can feel.
+
+I know I am crazy but this is the love that inspires me and always make me take steps. I adore so many things about you that I can't even say that I have a favorite, because there are just way too many to choose from. 
+
+Your presence, firstly, because without it, I'd have nothing of you. You are there for me through the good and bad. 
+Your thoughtfulness. You try to remember things that are important to me, and include me in your day. 
+I adore your giving heart. The way you think so often of me, and wanting to ensure that I feel loved, and less alone. 
+
+I trust you more than I've trusted anyone. This is kind of enmeshed with other ones. The way you allow me to be myself, and have allowed me to shed my mask over time. In learning to love myself, so that I can love you with my best self. 
+For your honesty, even when it's difficult. 
+I adore your gentleness and consideration. How you think of me, and how your response might affect me in that moment. 
+I adore your desire to learn. For continuing to obtain information that allows you to see open minded perspectives. 
+I adore your humor. You make me smile and laugh so much. 
+
+I adore you, my magical mermaid. 
+You have my whole heart for my whole life. 
+I love you always in all ways.
+
+Happy Birthday my love, I will always and always lovee you.
+
+Yours Vidhant
+— Mr Husband ❤️`;
+
+/* [photo#, date, title, line] grouped into scenes */
+const P=n=>[
+ ["01 October 2026","Where It All Began","Among all the people in the room, my eyes only ever searched for you."],
+ ["07 October 2026","The Language of Hands","Gentle and quiet. In your warmth, my restless world finally found stillness."],
+ ["16 October 2026","Covered Smiles","We tried hiding our smiles, but our eyes were already speaking."],
+ ["16 October 2026","Leaning Closer","Every glance at you feels like coming home."],
+ ["16 October 2026","Dimples & Pure Joy","Seeing you laugh like this is my favorite moment in every day."],
+ ["16 October 2026","Delightfully Ridiculous","Being silly with you is the easiest thing in the universe."],
+ ["19 October 2026","Golden Traditions","Surrounded by celebration, but you were the only festival I watched."],
+ ["19 October 2026","Sunny Afternoons","Side by side, making simple hours feel like cherished memories."],
+ ["28 October 2026","Paper Hats & Mustaches","Falling in love with your humor and easy laughter every single day."],
+ ["28 October 2026","Secret Whispers","Reaching for your hand in the middle of a busy class."],
+ ["30 October 2026","Suited In Midnight","Standing tall, feeling complete because you were beside me."],
+ ["30 October 2026","Unfiltered Happiness","The brightest smiles happen when we are together."],
+ ["30 October 2026","Resting On My Shoulder","The gentle weight of your head—peace in its purest form."],
+ ["30 October 2026","स्वागत समारोह","Framed in green and gold, sharing our signature sign."],
+ ["30 October 2026","Peace & Grace","No matter where we stand, you light up every frame."],
+ ["30 October 2026","Striking Poses","Every photograph is a timestamp of how deeply I adore you."],
+ ["30 October 2026","Evening Glow","Under the soft hall lights, celebrating life with you."],
+ ["30 October 2026","When The Evening Faded","Quiet comfort, leaning on each other as the world slowed down."],
+ ["03 November 2026","Warm Sunshine","Crisp white shirts, open roads, and familiar laughter."],
+ ["03 November 2026","On Every Road Ahead","As long as you are beside me, every journey is beautiful."]][n-1];
+const S=[
+ {t:"The Beginning",ph:[1],c:'#d9628f'},
+ {t:"The Language of Hands",ph:[2],c:'#cf5883'},
+ {t:"Covered Smiles",ph:[3,4,5,6],c:'#c44d7a'},
+ {t:"Golden Traditions",ph:[7,8],c:'#c2705f'},
+ {t:"Paper Hats & Whispers",ph:[9,10],c:'#b84470'},
+ {t:"Suited In Midnight",ph:[11,12,13,14,15,16,17,18],c:'#7d2a62'},
+ {t:"On Every Road Ahead",ph:[19,20],c:'#c9577f'},
+ {t:"To My Wife",letter:1,c:'#5e1d42'}];
+
+/* sunflower cutout */
+function sf(n,rot,a,b,seeds,sz){let s=`<svg viewBox="-60 -60 120 120" width="${sz}" height="${sz}">`;
+ for(let i=0;i<n;i++)s+=`<ellipse cx="0" cy="-37" rx="8.5" ry="22" transform="rotate(${i*360/n+rot})" fill="${i%2?a:b}"/>`;
+ s+='<circle r="19" fill="#4a2410"/><circle r="15" fill="#5c2f14"/>';
+ if(seeds)for(let i=1;i<80;i++){const r=Math.sqrt(i)*1.55,t=i*2.39996;s+=`<circle cx="${(r*Math.cos(t)).toFixed(1)}" cy="${(r*Math.sin(t)).toFixed(1)}" r="1.15" fill="#d99a45"/>`}
+ return s+'</svg>'}
+[[2,150],[11,100],[21,125],[34,90],[48,150],[62,95],[74,130],[86,100],[95,140]].forEach((g,i)=>{
+ const d=document.createElement('div');d.className='gf';d.style.cssText=`left:${g[0]}%;margin-left:-${g[1]/2}px;animation-delay:${-i*.7}s;animation-duration:${4+i%3}s`;
+ d.innerHTML=sf(16,i*7,'#ffb02e','#ffc94d',1,g[1])+`<span style="display:block;height:${24+i%3*16}px"></span>`;$('hills').appendChild(d)});
+
+/* build scenes */
+const jag=()=>{let p=[],n=14;for(let i=0;i<=n;i++)p.push(`${i/n*100}% ${Math.random()*1.8}%`);for(let i=0;i<=n;i++)p.push(`${100-Math.random()*1.5}% ${i/n*100}%`);
+ for(let i=n;i>=0;i--)p.push(`${i/n*100}% ${100-Math.random()*1.8}%`);for(let i=n;i>=0;i--)p.push(`${Math.random()*1.5}% ${i/n*100}%`);return `polygon(${p.join(',')})`};
+let k=0;
+$('film').innerHTML=S.map((s,si)=>{
+ const n=s.letter?1:s.ph.length,h=s.letter?170:n*85+60;
+ const head=`<div class="chap"><small>Scene ${String(si+1).padStart(2,'0')}</small><h2>${s.t}</h2></div>`;
+ if(s.letter)return `<section class="scene" style="height:${h}vh" data-i="${si}"><div class="stage"><div class="paper" id="paper"><div class="seal">V</div><div class="sal">To My Wife,</div><div id="lt"></div><span class="cur" id="cur"></span><center><button class="btn" id="again">Read Again</button></center></div></div></section>`;
+ return `<section class="scene" style="height:${h}vh" data-i="${si}"><div class="stage">${head}`+
+  s.ph.map(p=>`<div class="cutw" data-p="${p}"><div class="cut" style="clip-path:${jag()}"><img src="photo${p}.jpg.jpeg" onerror="this.onerror=null;this.src='photo${p}.jpg'" alt="Memory ${p}"></div></div>`).join('')+
+  `<div class="cap"><b></b><h3></h3><p></p><div class="dots"></div></div></div></section>`}).join('');
+const scenes=[...document.querySelectorAll('.scene')];
+const cuts=scenes.map(sc=>[...sc.querySelectorAll('.cutw')]);
+document.querySelectorAll('.cutw').forEach(c=>c.onclick=()=>{
+ if(c.dataset.act==='1'){$('lbi').src=c.querySelector('img').src;$('lb').style.display='flex';return}
+ const sc=c.closest('.scene'),si=+sc.dataset.i,i=cuts[si].indexOf(c),n=cuts[si].length;
+ scrollTo({top:sc.getBoundingClientRect().top+scrollY+(i+.5)/n*(sc.offsetHeight-innerHeight),behavior:'smooth'})});
+$('lb').onclick=()=>$('lb').style.display='none';
+
+/* preload */
+const all=[...document.querySelectorAll('.cut img')];let done=0;
+function tick(){done++;const p=Math.round(done/all.length*100);$('pct').textContent='Setting up the paper theatre '+p+'%';$('lfill').style.width=p+'%';
+ if(done>=all.length)setTimeout(()=>{$('load').style.display='none';$('enter').style.display='flex'},350)}
+all.forEach(im=>{let fin=false;const f=()=>{if(!fin){fin=true;tick()}};
+ if(im.complete&&im.naturalWidth)f();else{im.addEventListener('load',f);im.addEventListener('error',()=>setTimeout(f,400))}});
+setTimeout(()=>{if(done<all.length){done=all.length-1;tick()}},9000);
+
+/* pointer parallax */
+let px=0,py=0;
+addEventListener('mousemove',e=>{px=e.clientX/innerWidth*2-1;py=e.clientY/innerHeight*2-1});
+addEventListener('touchmove',e=>{const t=e.touches[0];px=t.clientX/innerWidth*2-1;py=t.clientY/innerHeight*2-1},{passive:true});
+
+/* scroll-driven film */
+
+const bc=document.createElement('canvas');bc.id='burn';document.body.appendChild(bc);
+const gl=bc.getContext('webgl',{premultipliedAlpha:true,alpha:true,antialias:false});
+let bU={},burnT0=0;
+if(gl){
+ const mk=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);return o};
+ const pr=gl.createProgram();
+ gl.attachShader(pr,mk(gl.VERTEX_SHADER,`attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`));
+ gl.attachShader(pr,mk(gl.FRAGMENT_SHADER,`
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+uniform vec2 R;uniform float T,M,MODE,SEED;
+float h(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
+float ns(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+ return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*ns(p);p=p*2.03+vec2(17.1,9.7);a*=.5;}return v;}
+void main(){
+ vec2 uv=gl_FragCoord.xy/R;vec2 q=uv*vec2(R.x/R.y,1.);
+ float n=fbm(q*2.6+SEED+vec2(0.,-T*.05));
+ n=clamp((n-.18)/.62,0.,1.);
+ float bias=MODE<.5?uv.y:length(uv-.5)*1.4;
+ n=n*.72+clamp(bias,0.,1.)*.28;
+ float thr=M*1.4-.2;
+ float s=(MODE<.5?thr-n:n-thr)+(ns(q*16.+vec2(0.,-T*2.5))-.5)*.08;
+ float on=smoothstep(0.,.04,M)*(1.-smoothstep(.96,1.,M));
+ float core=exp(-s*s/.0008),mid=exp(-s*s/.005),halo=exp(-abs(s)/.18);
+ vec3 hot=vec3(1.,.93,.96),pink=vec3(1.,.42,.69),deep=vec3(.8,.1,.42);
+ vec3 fire=(deep*halo*.55+pink*mid*1.1+hot*core*1.3)*on;
+ float sp=step(.992,h(floor(gl_FragCoord.xy/4.)+floor(T*8.)))*exp(-abs(s)/.15)*on;
+ fire+=vec3(1.,.78,.55)*sp*1.6;
+ vec3 ch=mix(vec3(.13,.02,.09),vec3(.32,.06,.19),fbm(q*5.+3.));
+ ch+=pink*exp(-max(s,0.)/.06)*.45*on;
+ float ca=smoothstep(-.004,.014,s);
+ float al=clamp(ca+(max(core,mid)+halo*.3)*on+sp,0.,1.);
+ vec3 col=min(ch*ca+fire,vec3(al));
+ gl_FragColor=vec4(col,al);
+}`));
+ gl.linkProgram(pr);gl.useProgram(pr);
+ gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());
+ gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+ const loc=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+ ['R','T','M','MODE','SEED'].forEach(k=>bU[k]=gl.getUniformLocation(pr,k));
+}
+function drawBurn(vh){
+ if(!gl)return;
+ let mode=0,m=0,seed=0,on=false;
+ if(burnT0){const e=(performance.now()-burnT0)/2800;if(e>=1)burnT0=0;else{on=true;mode=1;m=e;seed=3.1}}
+ if(!on)for(let i=0;i<7;i++){const tp=scenes[i+1].getBoundingClientRect().top;
+  if(tp<vh&&tp>0){const w=1-tp/vh;on=true;mode=w<.5?0:1;m=w<.5?w*2:(w-.5)*2;seed=i*7.3+1;break}}
+ if(!on){bc.style.display='none';return}
+ bc.style.display='block';
+ const w=Math.max(2,innerWidth*.6|0);
+ if(bc.width!==w){bc.width=w;bc.height=Math.max(2,innerHeight*.6|0);gl.viewport(0,0,bc.width,bc.height)}
+ gl.uniform2f(bU.R,bc.width,bc.height);gl.uniform1f(bU.T,performance.now()/1000);
+ gl.uniform1f(bU.M,m);gl.uniform1f(bU.MODE,mode);gl.uniform1f(bU.SEED,seed);
+ gl.drawArrays(gl.TRIANGLES,0,3);
+}
+
+const cl=(v,a,b)=>Math.min(b,Math.max(a,v));let cur=-1,started=false,capIdx=[];
+function frame(){
+ const y=scrollY,vh=innerHeight,tot=document.documentElement.scrollHeight-vh;
+ $('bar').style.width=(tot>0?y/tot*100:0)+'%';
+ let act=0;
+ scenes.forEach((sc,si)=>{
+  const r=sc.getBoundingClientRect();if(r.top<=vh*.5&&r.bottom>vh*.5)act=si;
+  if(r.bottom<-vh||r.top>vh*2)return;
+  const p=cl(-r.top/(r.height-vh),0,1),n=cuts[si].length;
+  if(S[si].letter){if(p>.25&&!started){started=true;typeLetter()}
+   const pa=$('paper');pa.style.transform=`translate(-50%,-50%) rotateY(${px*5}deg) rotateX(${-py*4}deg)`;return}
+  let best=0,bd=9;
+  cuts[si].forEach((c,i)=>{
+   const t=p*n-(i+.5),a=Math.abs(t);if(a<bd){bd=a;best=i}
+   const w=c.offsetWidth,rot=-t*30+px*6,tz=-a*160,o=cl(1.3-a*.3,0,1);
+   c.style.opacity=o;c.style.pointerEvents=o>.15?'auto':'none';c.dataset.act=a<.5?1:0;c.style.zIndex=10-Math.round(a*3);
+   c.style.transform=`translate(-50%,-50%) translate3d(${t*w*.9+px*-14}px,${a*3+py*-1.2}vh,${tz}px) rotateY(${rot}deg) rotateX(${py*-5}deg) rotate(${t*4+(si%2?1.2:-1.2)}deg) scale(${1-a*.1})`});
+  const cap=sc.querySelector('.cap'),ph=cuts[si][best].dataset.p;
+  if(cap.dataset.p!==ph){cap.dataset.p=ph;cap.style.opacity=0;setTimeout(()=>{const d=P(+ph);cap.querySelector('b').textContent=d[0];cap.querySelector('h3').textContent=d[1];cap.querySelector('p').textContent=d[2];cap.querySelector('.dots').textContent=n>1?`${best+1} / ${n} · scroll, or tap a side photo`:'';cap.style.opacity=1},220)}
+ });
+ if(act!==cur){cur=act;$('bg').style.background=`linear-gradient(180deg,${S[act].c} 0%,${S[Math.min(act+1,7)].c} 100%)`;$('count').textContent=String(act+1).padStart(2,'0')+' / 08'}
+ $('hills').style.transform=`translateX(${px*-14}px)`;
+ drawBurn(vh);
+}
+addEventListener('scroll',frame,{passive:true});addEventListener('resize',frame);
+(function lp(){frame();requestAnimationFrame(lp)})();
+
+/* typewriter */
+let tt;function typeLetter(){clearTimeout(tt);const lt=$('lt');lt.textContent='';$('cur').style.display='inline-block';$('again').style.display='none';let i=0;
+ (function s(){if(i<letterText.length){const ch=letterText[i++];lt.textContent+=ch;lt.scrollTop=lt.scrollHeight;tt=setTimeout(s,'.?!'.includes(ch)?320:ch===','?130:ch==='\n'?190:22)}
+ else{$('cur').style.display='none';$('again').style.display='block'}})()}
+$('again').onclick=typeLetter;
+
+/* AUDIO — local song.mp3 first (most reliable), online copy as backup */
+const srcs=['song.mp3','https://archive.org/download/fave2/Ed%20Sheeran%20-%20Perfect.mp3'];
+let ai=0,want=false;const au=new Audio();au.loop=true;au.volume=.85;au.preload='auto';au.src=srcs[0];
+const toast=m=>{const t=$('toast');t.textContent=m;t.style.opacity=1;setTimeout(()=>t.style.opacity=0,5000)};
+au.addEventListener('error',()=>{if(ai<srcs.length-1){ai++;au.src=srcs[ai];au.load();if(want)au.play().catch(()=>{})}
+ else{toast('Song not found — put a file named song.mp3 in the same folder as index.html');sound(false)}});
+function sound(v){want=v;$('sndB').classList.toggle('on',v);$('sndB').textContent=v?'Sound on':'Sound off';
+ if(v)au.play().catch(()=>{});else au.pause()}
+$('sndB').onclick=()=>sound(!want);
+
+/* AUTO PLAY */
+let auto=false,raf;
+function autoLoop(){if(!auto)return;const l=scenes[7].getBoundingClientRect();
+ if(l.top<-innerHeight*.35||scrollY+innerHeight>=document.documentElement.scrollHeight-2){setAuto(false);return}
+ scrollBy(0,1.5);raf=requestAnimationFrame(autoLoop)}
+function setAuto(v){auto=v;$('autoB').classList.toggle('on',v);cancelAnimationFrame(raf);if(v)autoLoop()}
+$('autoB').onclick=()=>setAuto(!auto);
+['wheel','touchstart','keydown'].forEach(e=>addEventListener(e,()=>{if(auto)setAuto(false)},{passive:true}));
+
+/* ENTER */
+function enter(a){scrollTo(0,0);const it=$('intro');it.style.transition='none';it.classList.add('gone');burnT0=performance.now();sound(true);if(a)setTimeout(()=>setAuto(true),1200)}
+$('goManual').onclick=()=>enter(false);$('goAuto').onclick=()=>enter(true);
+
+/* petals & snow */
+const cv=$('cv'),cx=cv.getContext('2d');let W,H;const rs=()=>{W=cv.width=innerWidth;H=cv.height=innerHeight};rs();addEventListener('resize',rs);
+class F{constructor(b,x,y){this.r0(1);if(b){this.x=x;this.y=y;this.vx=(Math.random()-.5)*6;this.vy=-Math.random()*5-1;this.l=80;this.pt=Math.random()>.3}}
+ r0(i){this.x=Math.random()*W;this.y=i?Math.random()*H:-10;this.z=Math.random();this.pt=Math.random()>.8;this.r=this.pt?3+this.z*4:1+this.z*3;this.vy=.4+this.z*1.3;this.vx=(Math.random()-.5)*.4;this.a=Math.random()*6;this.va=(Math.random()-.5)*.05;this.ph=Math.random()*9;this.l=0}
+ u(){if(this.l){this.vy+=.12;if(!--this.l){this.r0();return}}this.ph+=.02;this.x+=this.vx+Math.sin(this.ph)*.5+px*this.z;this.y+=this.vy;this.a+=this.va;if(this.y>H+10||this.x<-20||this.x>W+20)this.r0()}
+ d(){cx.save();cx.translate(this.x,this.y);cx.rotate(this.a);
+  if(this.pt){cx.fillStyle=`rgba(255,${150+this.z*50|0},${185+this.z*30|0},${.55+this.z*.4})`;cx.beginPath();cx.ellipse(0,0,this.r*1.5,this.r*.85,0,0,7);cx.fill()}
+  else{cx.fillStyle=`rgba(255,255,255,${.55+this.z*.45})`;cx.shadowBlur=8;cx.shadowColor='#fff';cx.beginPath();cx.arc(0,0,this.r,0,7);cx.fill()}cx.restore()}}
+let ps=Array.from({length:140},()=>new F());
+addEventListener('click',e=>{if(e.target.closest('.btn,.pill'))return;for(let i=0;i<20;i++)ps.push(new F(1,e.clientX,e.clientY));if(ps.length>380)ps.splice(140,ps.length-380)});
+(function a(){cx.clearRect(0,0,W,H);ps.forEach(p=>{p.u();p.d()});requestAnimationFrame(a)})();
+</script>
+</body>
+</html>
